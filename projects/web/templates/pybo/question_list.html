@@ -1,12 +1,31 @@
-{% if question_list %}
-    <ul>
-    {% for question in question_list %}
-        <!-- 별칭을 사용해보자 -->
-        <li><a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a></li> 
-        <!-- question.id = question.id 처럼 파라미터 명을 전달할 수도 있고, 전달해야 하는 파라미터값이 두개 이상이라면 question.id=question.id page=2 처럼 띄워서 작성한다. -->
-        <!-- 또한 현재 pybo앱에서 app_name = 'pybo' 라는 이름으로 네임스페이스를 사용하고 있기 때문에 detail이 아닌 pybo:detail형태로 작성해야 한다. -->
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>질문이 없습니다.</p>
-{% endif %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+
+<div class="container my-3">
+  <table class="table">
+      <thead>
+      <tr class="table-dark">
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성일시</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% if question_list %}
+      {% for question in question_list %}
+      <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+              <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
+          </td>
+          <td>{{ question.create_date }}</td>
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr>
+          <td colspan="3">질문이 없습니다.</td>
+      </tr>
+      {% endif %}
+      </tbody>
+  </table>
+</div>
