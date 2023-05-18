@@ -18,6 +18,6 @@ def detail(request, question_id):
 
 def answer_create(request, question_id):
   question = get_object_or_404(Question, pk=question_id)
-  # request.POST.get('content')는 POST로 전송된 form데이터 중 content항목에 일치하는 값을 의미한다.
+  # request.POST.get('content')는 POST로 전송된 form데이터 중 content항목에 일치하는 값을 의미한다
   question.answer_set.create(content = request.POST.get('content'), create_date=timezone.now())
   return redirect('pybo:detail', question_id=question.id)
