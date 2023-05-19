@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Question
+from .forms import QuestionForm, AnswerForm
+from django.http import HttpResponseNotAllowed
 
 def index(request):
   # order_by : 조회 결과 정렬함수. create_date앞에 -가 붙었기에 역순으로 정렬하는것을 의미한다.
@@ -18,6 +20,32 @@ def detail(request, question_id):
 
 def answer_create(request, question_id):
   question = get_object_or_404(Question, pk=question_id)
-  # request.POST.get('content')는 POST로 전송된 form데이터 중 content항목에 일치하는 값을 의미한다
-  question.answer_set.create(content = request.POST.get('content'), create_date=timezone.now())
-  return redirect('pybo:detail', question_id=question.id)
+  if request.method == "POST":
+    form = AnswerForm(request.POST)
+    if form.is_valid():
+      answer = form.save(commit=False)
+      answer.create_date = timezone.now()
+      answer.question = question
+      answer.save()
+      return redirect('pybo:detail', question_id=question.id)
+    
+  else:
+    return HttpResponseNotAllowed('Only POST is possible')
+  context = {'question':question, 'form':form}
+  return render(request, 'pybo/question_detail.html', context)
+
+def question_create(request):
+  form = QuestionForm()
+  if request.method == 'POST':
+    form = QuestionForm(request.POST)
+    if form.is_valid():
+      question = form.save(commit=False)
+      question.create_date = timezone.now()
+      question.save()
+      return redirect('pybo:index')
+  
+  else:
+    form = QuestionForm()
+  context = {'form':form}
+  
+  return render(request, 'pybo/question_create.html', context)
