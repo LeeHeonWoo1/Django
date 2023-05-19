@@ -1,5 +1,5 @@
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+{% extends 'base.html' %}
+{% block content %}
 <div class="container my-3">
     <!-- 질문 -->
     <h2 class="border-bottom py-2">{{ question.subject }}</h2>
@@ -32,6 +32,20 @@
       <!-- csrf_token : 보안에 관련된 항목으로 form으로 전송한 데이터가 실제 웹 페이지에서 작성한 데이터인지를 판단하는 가늠자 역할을 한다. -->
       <!-- 만약 해커가 공격을 시도하면 서버에서 발행한 csrf_token값과 해커가 일방적으로 보낸 csrf_token값이 일치하지 않기 때문에 블록될것이다. -->
         {% csrf_token %}
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            <div>
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 오류표시 End -->
         <div class="mb-3">
             <label for="content" class="form-label">답변내용</label>
             <textarea name="content" id="content" class="form-control" rows="10"></textarea>
@@ -39,3 +53,4 @@
         <input type="submit" value="답변등록" class="btn btn-primary">
     </form>
 </div>
+{% endblock %}
