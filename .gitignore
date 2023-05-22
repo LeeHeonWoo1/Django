@@ -3,3 +3,4 @@ myDjango-1.cmd
 myDjango.cmd
 jango
 projects/web/*/__pycache__
+projects/web/*/migrations
