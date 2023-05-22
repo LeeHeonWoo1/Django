@@ -1,25 +1,32 @@
 {% extends 'base.html' %}
+{% load pybo_filter %}
 {% block content %}
 <div class="container my-3">
   <table class="table">
       <thead>
-      <tr class="table-dark">
+      <tr class="text-center table-dark">
+          
           <th>번호</th>
-          <th>제목</th>
+          <th style="width:50%">제목</th>
+          <th>글쓴이</th>
           <th>작성일시</th>
       </tr>
       </thead>
       <tbody>
       {% if question_list %}
       {% for question in question_list %}
-      <tr>
-          <td>{{ forloop.counter }}</td>
+      <tr class="text-center">
           <td>
+            <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
+            {{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}
+          </td>
+          <td class="text-start">
               <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
               {% if question.answer_set.count > 0 %}
                 <span class="text-danger small mx-2">{{ question.answer_set.count }}</span>
               {% endif %}
           </td>
+          <td>{{ question.author.username }}</td>
           <td>{{ question.create_date }}</td>
       </tr>
       {% endfor %}
@@ -35,9 +42,15 @@
     <!-- 이전페이지 -->
     {% if question_list.has_previous %}
     <li class="page-item">
+        <a class="page-link" href="?page=1">처음으로</a>
+    </li>
+    <li class="page-item">
         <a class="page-link" href="?page={{ question_list.previous_page_number }}">이전</a>
     </li>
     {% else %}
+    <li class="page-item disabled">
+        <a class="page-link" href="?page=1">처음으로</a>
+    </li>
     <li class="page-item disabled">
         <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
     </li>
@@ -58,13 +71,23 @@
     {% endfor %}
     <!-- 다음페이지 -->
     {% if question_list.has_next %}
+    {% with total=question_list.paginator.count per_page=question_list.paginator.per_page %}
     <li class="page-item">
         <a class="page-link" href="?page={{ question_list.next_page_number }}">다음</a>
     </li>
+    <li class="page-item">
+        <a class="page-link" href="?page={{ total|div:per_page }}">끝으로</a>
+    </li>
+    {% endwith %}
     {% else %}
+    {% with total=question_list.paginator.count per_page=question_list.paginator.per_page %}
     <li class="page-item disabled">
         <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
     </li>
+    <li class="page-item disabled">
+        <a class="page-link" href="?page={{ total|div:per_page }}">끝으로</a>
+    </li>
+    {% endwith %}
     {% endif %}
   </ul>
   <!-- 페이징처리 끝 -->
