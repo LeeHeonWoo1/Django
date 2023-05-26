@@ -1,0 +1,16 @@
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="keyword" id="keyword" >
+  <button type="submit">검색하기</button>
+</form>
+{% if job_list %}
+<ul>
+  {% for job_tit in job_list %}
+    <li>{{ job_tit }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<h1>
+  검색 결과가 존재하지 않습니다.
+</h1>
+{% endif %}
