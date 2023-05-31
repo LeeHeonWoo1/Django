@@ -1,16 +1,35 @@
-<form method="post">
-  {% csrf_token %}
-  <input type="text" name="keyword" id="keyword" >
-  <button type="submit">검색하기</button>
-</form>
-{% if job_list %}
-<ul>
-  {% for job_tit in job_list %}
-    <li>{{ job_tit }}</li>
-  {% endfor %}
-</ul>
+{% extends 'main.html' %}
+{% block content %}
+{% load static  %}
+<div class="base">
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" class="searchTerm" name="keyword" id="keyword" required>
+    <label>검색할 직무를 입력하세요.</label>
+    <span></span>
+    <button type="submit" class="searchButton">검색하기</button>
+  </form>
+</div>
+{% if result_list %}
+  <table>
+    <thead>
+      <tr>
+        <th>공고</th>
+        <th>회사명</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for job in result_list %}
+        <tr>
+          <td>{{job.0}}</td>
+          <td>{{job.1}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% else %}
-<h1>
-  검색 결과가 존재하지 않습니다.
-</h1>
+  <h1>
+    검색 결과가 존재하지 않습니다.
+  </h1>
 {% endif %}
+{% endblock %}
