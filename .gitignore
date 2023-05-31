@@ -4,3 +4,6 @@ myDjango.cmd
 jango
 projects/web/*/__pycache__
 projects/web/*/migrations
+projects/sideProject/*/migrations
+projects/sideProject/*/__pycache__
+projects/sideProject/.env
