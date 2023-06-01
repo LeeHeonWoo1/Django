@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 import requests
 from urllib.parse import quote
+from starlette.config import Config
 
-header = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'}
+config = Config(r'C:\Users\OWNER\Desktop\Django\projects\sideProject\.env')
+
+header = {'User-Agent':config('USER_AGENT')}
 
 def get_job_title(keyword):
   quoted_keyword = quote(keyword)
@@ -27,8 +30,10 @@ def get_job_title(keyword):
     result_list = []
     for content in zip(job_list, com_list):
       result_list.append(list(content))
-      
+    
     return result_list
     
   else:
     print(res.status_code)
+    
+get_job_title('python')
